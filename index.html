@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Martin</title>
+<title>Lightscape Photo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -391,7 +391,7 @@ function renderFE(app){
   hbBtn.onclick=function(){sidebarOpen?closeSidebar():openSidebar();};
   tb.appendChild(hbBtn);
   // Brand
-  var brand=mkEl('div','topbar-brand');brand.innerHTML='Martin';
+  var brand=mkEl('div','topbar-brand');brand.innerHTML='Lightscape Photo';
   brand.onclick=function(){feGoRoot();};
   tb.appendChild(brand);
   // Breadcrumb
@@ -447,7 +447,7 @@ function renderFE(app){
   var stxt=feView==='album'&&feAlbum?DATA[feFolder].albums[feAlbum].photos.length+' 張照片':tA()+' 個相本 共 '+tP()+' 張照片';
   var stat=mkEl('div','statusbar');
   stat.appendChild(mkEl('span','',stxt));
-  stat.appendChild(mkEl('span','','Martin Portfolio'));
+  stat.appendChild(mkEl('span','','Lightscape Photo'));
   shell.appendChild(stat);
   app.appendChild(shell);
 
@@ -455,7 +455,7 @@ function renderFE(app){
   if(showLogin){
     var ov=mkEl('div','login-overlay');
     var card=mkEl('div','login-card');
-    card.appendChild(mkEl('div','login-logo','Martin'));
+    card.appendChild(mkEl('div','login-logo','Lightscape Photo'));
     card.appendChild(mkEl('div','login-sub','Admin Panel'));
     card.appendChild(mkEl('div','form-lbl','管理密碼'));
     var inp=document.createElement('input');
@@ -679,7 +679,7 @@ function renderAD(app){
   hbBtn.onclick=function(){sidebarOpen?closeSidebar():openSidebar();};
   tl.appendChild(hbBtn);
   tl.appendChild(ic('camera',15));
-  var ttl=mkEl('span','ad-topbar-brand-text');ttl.style.cssText='font-size:13px;font-weight:400;letter-spacing:.04em';ttl.textContent='Martin 後台';
+  var ttl=mkEl('span','ad-topbar-brand-text');ttl.style.cssText='font-size:13px;font-weight:400;letter-spacing:.04em';ttl.textContent='Lightscape Photo 後台';
   tl.appendChild(ttl);
   tl.appendChild(mkEl('span','badge-ok','已登入'));
   tb.appendChild(tl);
