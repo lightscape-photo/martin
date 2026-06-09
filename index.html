@@ -364,25 +364,6 @@ function openSidebar(){
 }
 
 // ── RENDER ──
-window.addEventListener('popstate',function(e){
-  var s=e.state;
-  if(!s){
-    // 回到首頁
-    feView='home';feFolder=null;feAlbum=null;lbOpen=false;render();
-  } else if(s.view==='folder'){
-    feView='folder';feFolder=s.folder;feAlbum=null;lbOpen=false;render();
-  } else if(s.view==='album' && s.lb==null){
-    feView='album';feFolder=s.folder;feAlbum=s.album;lbOpen=false;render();
-  } else if(s.view==='album' && s.lb!=null){
-    feView='album';feFolder=s.folder;feAlbum=s.album;lbIdx=s.lb;
-    lbPhotos=DATA[feFolder].albums[feAlbum].photos;
-    lbOpen=true;render();scrollThumb();
-  }
-});
-
-// 初始狀態
-history.replaceState({view:'home'},'','');
-
 function render(){
   var app=document.getElementById('app');
   app.innerHTML='';
@@ -611,7 +592,7 @@ function buildJG(wrap,photos,onClickPhoto){
 }
 
 // Lightbox
-function openLB(i){lbPhotos=DATA[feFolder].albums[feAlbum].photos;lbIdx=i;lbOpen=true;history.pushState({view:'album',folder:feFolder,album:feAlbum,lb:i},'','');render();scrollThumb();}
+function openLB(i){lbPhotos=DATA[feFolder].albums[feAlbum].photos;lbIdx=i;lbOpen=true;render();scrollThumb();}
 function renderLB(app){
   var wrap=mkEl('div','lb-wrap');
   var top=mkEl('div','lb-top');
@@ -673,8 +654,8 @@ function doLogin(){
 
 // FE nav
 function feGoRoot(){feView='root';feFolder=null;feAlbum=null;lbOpen=false;sidebarOpen=false;render();}
-function feGoFolder(fk){feView='folder';feFolder=fk;feAlbum=null;lbOpen=false;history.pushState({view:'folder',folder:fk},'','');sidebarOpen=false;render();}
-function feGoAlbum(fk,ak){feView='album';feFolder=fk;feAlbum=ak;lbOpen=false;history.pushState({view:'album',folder:fk,album:ak},'','');sidebarOpen=false;render();}
+function feGoFolder(fk){feView='folder';feFolder=fk;feAlbum=null;lbOpen=false;sidebarOpen=false;render();}
+function feGoAlbum(fk,ak){feView='album';feFolder=fk;feAlbum=ak;lbOpen=false;sidebarOpen=false;render();}
 
 // ── ADMIN ──
 function renderAD(app){
