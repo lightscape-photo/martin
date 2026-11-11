@@ -658,7 +658,7 @@ function buildJG(wrap,photos,onClickPhoto){
 }
 
 // Lightbox
-function openLB(i){lbPhotos=DATA[feFolder].albums[feAlbum].photos;lbIdx=i;lbOpen=true;render();scrollThumb();}
+function openLB(i){lbPhotos=DATA[feFolder].albums[feAlbum].photos;lbIdx=i;lbOpen=true;pushHistory();render();scrollThumb();}
 function renderAbout(app){
   var ab=DATA._about||{};
   var abName=ab.name||'Martin';
@@ -788,7 +788,7 @@ function renderLB(app){
   });
   
 }
-function closeLB(){lbOpen=false;render();}
+function closeLB(){if(lbOpen&&history.state&&history.state.lbOpen){history.back();}else{lbOpen=false;render();}}
 function scrollThumb(){requestAnimationFrame(function(){var strip=document.getElementById('lbStrip');var e=document.getElementById('lbt'+lbIdx);if(strip&&e){var pos=e.offsetLeft-(strip.clientWidth/2)+(e.offsetWidth/2);strip.scrollLeft=pos;}});}
 function prevLB(){if(lbIdx>0){lbIdx--;render();scrollThumb();}}
 function nextLB(){if(lbIdx<lbPhotos.length-1){lbIdx++;render();scrollThumb();}}
@@ -801,11 +801,47 @@ function doLogin(){
   else{var e=document.getElementById('loginErr');if(e)e.textContent='密碼錯誤';}
 }
 
-// FE nav
-function feGoRoot(){feView='root';feFolder=null;feAlbum=null;lbOpen=false;sidebarOpen=false;render();}
-function feGoAbout(){feView='about';lbOpen=false;render();}
-function feGoFolder(fk){feView='folder';feFolder=fk;feAlbum=null;lbOpen=false;sidebarOpen=false;render();}
-function feGoAlbum(fk,ak){feView='album';feFolder=fk;feAlbum=ak;lbOpen=false;sidebarOpen=false;render();}
+// FE nav & History API
+function getHistoryState(){
+  return {feView:feView,feFolder:feFolder,feAlbum:feAlbum,lbOpen:lbOpen,lbIdx:lbIdx};
+}
+function isSameState(s1,s2){
+  if(!s1||!s2)return false;
+  return s1.feView===s2.feView && s1.feFolder===s2.feFolder && s1.feAlbum===s2.feAlbum && s1.lbOpen===s2.lbOpen;
+}
+function pushHistory(){
+  var next=getHistoryState();
+  if(!isSameState(history.state,next)){
+    history.pushState(next,'');
+  }
+}
+window.addEventListener('popstate',function(e){
+  if(mode!=='fe')return;
+  var st=e.state;
+  if(st){
+    feView=st.feView||'root';
+    feFolder=st.feFolder||null;
+    feAlbum=st.feAlbum||null;
+    lbOpen=!!st.lbOpen;
+    if(lbOpen && feFolder && feAlbum && DATA[feFolder] && DATA[feFolder].albums[feAlbum]){
+      lbPhotos=DATA[feFolder].albums[feAlbum].photos;
+      lbIdx=st.lbIdx||0;
+    }else{
+      lbOpen=false;
+    }
+  }else{
+    feView='root';feFolder=null;feAlbum=null;lbOpen=false;
+  }
+  sidebarOpen=false;
+  render();
+  if(lbOpen)scrollThumb();
+});
+history.replaceState(getHistoryState(),'');
+
+function feGoRoot(){feView='root';feFolder=null;feAlbum=null;lbOpen=false;sidebarOpen=false;pushHistory();render();}
+function feGoAbout(){feView='about';lbOpen=false;sidebarOpen=false;pushHistory();render();}
+function feGoFolder(fk){feView='folder';feFolder=fk;feAlbum=null;lbOpen=false;sidebarOpen=false;pushHistory();render();}
+function feGoAlbum(fk,ak){feView='album';feFolder=fk;feAlbum=ak;lbOpen=false;sidebarOpen=false;pushHistory();render();}
 
 // ── ADMIN ──
 function renderAD(app){
